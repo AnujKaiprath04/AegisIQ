@@ -1,0 +1,111 @@
+# ==============================================================================
+# AegisIQ Git Ignore Specification
+# ==============================================================================
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Testing, Coverage & QA
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.tox/
+
+# Frontend / Node / Next.js
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
+out/
+frontend/out/
+dist/
+frontend/build/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Database files & Local State
+*.db
+*.sqlite
+*.sqlite3
+aegisiq.db
+test_aegisiq.db
+backend/aegisiq.db
+backend/test_aegisiq.db
+
+# Runtime Generated Files & Test Uploads
+backend/data/reports/*
+!backend/data/reports/.gitkeep
+backend/data/knowledge/*
+!backend/data/knowledge/.gitkeep
+backend/data/uploads/*
+!backend/data/uploads/.gitkeep
+!backend/data/uploads/enterprise_sales_2025_2026.csv
+!backend/data/uploads/financial_general_ledger.csv
+!backend/data/uploads/supply_chain_inventory.csv
+
+# Secrets & Environment Variables (CRITICAL: Do NOT remove!)
+.env
+.env.*
+!.env.example
+!.env.production.example
+backend/.env
+frontend/.env.local
+frontend/.env.production.local
+frontend/.env.development.local
+
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDE & Editor Directories
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+logs/
+*.log

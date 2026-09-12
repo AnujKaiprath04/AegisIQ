@@ -1,0 +1,8 @@
+deal_id,account_name,region,product,contract_value,close_date,sales_rep,status
+DEAL-1001,Meridian Global,North America,AI Decision Intelligence,450000,2026-01-15,Sarah Jenkins,Closed Won
+DEAL-1002,Apex BioTech,EMEA,Autonomous ETL Engine,320000,2026-01-22,Emily Watson,Closed Won
+DEAL-1003,Vanguard Logistics,North America,Supply Chain BI,680000,2026-02-04,Sarah Jenkins,Closed Won
+DEAL-1004,Kinetix Cloud,APAC,Enterprise RBAC Hub,190000,2026-02-18,Michael Chen,Closed Won
+DEAL-1005,Orion Aerospace,North America,Predictive Decision Platform,820000,2026-03-01,David Ross,Closed Won
+DEAL-1006,Nordic Retail Group,EMEA,AI Decision Intelligence,240000,2026-03-12,Emily Watson,Closed Won
+DEAL-1007,Pacific Financials,APAC,Autonomous ETL Engine,510000,2026-03-20,Michael Chen,Closed Won

@@ -1,0 +1,5 @@
+sku,product_name,category,stock_on_hand,reorder_level,unit_cost,lead_time_days
+SRV-EDGE-X9,Edge AI Inference Node,Compute,420,150,4200,8
+SEC-HSM-2026,Hardware Security HSM,Security,85,100,2800,12
+SAN-TB100-NVME,100TB High-Speed NVMe,Storage,310,80,8500,15
+NET-ROUTER-ZT,Zero-Trust Mesh Router,Network,620,200,1400,7

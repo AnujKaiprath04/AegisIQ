@@ -1,0 +1,57 @@
+name: AegisIQ DevSecOps & Security Vulnerability Scan
+
+on:
+  push:
+    branches: [main, staging]
+  schedule:
+    # Weekly Sunday midnight scan
+    - cron: "0 0 * * 0"
+  workflow_dispatch:
+
+jobs:
+  # ============================================================================
+  # 1. Trivy Vulnerability & Misconfiguration Scanner
+  # ============================================================================
+  trivy-scan:
+    name: Trivy Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy Vulnerability Scanner (Repo & Configs)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          format: "table"
+          exit-code: "0"
+          ignore-unfixed: true
+          severity: "CRITICAL,HIGH"
+
+  # ============================================================================
+  # 2. Python SAST with Bandit & Dependency Audit
+  # ============================================================================
+  python-sast:
+    name: Python SAST & Pip-Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install Security Scanners
+        run: |
+          pip install bandit pip-audit
+
+      - name: Run Bandit Security Analysis
+        run: |
+          bandit -r backend/app -f custom --msg-template "{abspath}:{line}: {test_id}[bandit]: {severity}: {msg}" || true
+
+      - name: Audit Python Dependencies
+        run: |
+          pip-audit -r backend/requirements.txt || true

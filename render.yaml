@@ -1,0 +1,46 @@
+services:
+  # --- AegisIQ Production FastAPI Backend ---
+  - type: web
+    name: aegisiq-backend
+    runtime: python
+    region: oregon
+    plan: standard
+    buildCommand: "cd backend && pip install -r requirements.txt"
+    startCommand: "cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 4"
+    healthCheckPath: /api/v1/ops/container/health
+    autoDeploy: true
+    branch: main
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.1
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: aegisiq-neon-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: aegisiq-redis-cache
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 60
+
+  # --- AegisIQ Private Redis Cache ---
+  - type: redis
+    name: aegisiq-redis-cache
+    region: oregon
+    plan: starter
+    maxmemoryPolicy: allkeys-lru
+    ipAllowList: []
+
+databases:
+  # --- External Neon PostgreSQL reference ---
+  - name: aegisiq-neon-db
+    databaseName: aegisiq_prod
+    user: aegisiq_admin
+    region: oregon
+    plan: standard

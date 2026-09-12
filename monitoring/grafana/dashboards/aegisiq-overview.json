@@ -1,0 +1,75 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "title": "Total API Throughput (QPS)",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "sum(rate(http_requests_total[1m]))",
+          "legendFormat": "QPS"
+        }
+      ]
+    },
+    {
+      "title": "API Error Rate (%)",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 0 },
+      "targets": [
+        {
+          "expr": "(sum(rate(http_requests_total{status=~\"5..\"}[1m])) / sum(rate(http_requests_total[1m]))) * 100",
+          "legendFormat": "Error %"
+        }
+      ]
+    },
+    {
+      "title": "P99 API Latency (ms)",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le)) * 1000",
+          "legendFormat": "P99 (ms)"
+        }
+      ]
+    },
+    {
+      "title": "Active Database Connections",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 18, "y": 0 },
+      "targets": [
+        {
+          "expr": "pg_stat_activity_count",
+          "legendFormat": "Connections"
+        }
+      ]
+    },
+    {
+      "title": "API Request Rate & Latency Percentiles (P50, P90, P99)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 6 },
+      "targets": [
+        { "expr": "histogram_quantile(0.50, sum(rate(http_request_duration_seconds_bucket[1m])) by (le)) * 1000", "legendFormat": "P50 Latency" },
+        { "expr": "histogram_quantile(0.90, sum(rate(http_request_duration_seconds_bucket[1m])) by (le)) * 1000", "legendFormat": "P90 Latency" },
+        { "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[1m])) by (le)) * 1000", "legendFormat": "P99 Latency" }
+      ]
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["aegisiq", "enterprise", "apm"],
+  "time": { "from": "now-1h", "to": "now" },
+  "timezone": "browser",
+  "title": "AegisIQ Enterprise Executive Telemetry & APM Overview",
+  "version": 1
+}

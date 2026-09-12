@@ -1,0 +1,119 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: aegisiq-prod-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-aegisiq_prod_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ChangeMeSecurePassword2026}
+      POSTGRES_DB: ${POSTGRES_DB:-aegisiq_prod}
+    volumes:
+      - prod_postgres_data:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 4096M
+        reservations:
+          cpus: "0.5"
+          memory: 1024M
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-aegisiq_prod_user} -d ${POSTGRES_DB:-aegisiq_prod}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aegisiq-prod-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: aegisiq-prod-redis
+    restart: always
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:-RedisSecure2026}"]
+    volumes:
+      - prod_redis_data:/data
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1024M
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-RedisSecure2026}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aegisiq-prod-net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../docker/Dockerfile.backend
+    container_name: aegisiq-prod-backend
+    restart: always
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-aegisiq_prod_user}:${POSTGRES_PASSWORD:-ChangeMeSecurePassword2026}@db:5432/${POSTGRES_DB:-aegisiq_prod}
+      REDIS_URL: redis://:${REDIS_PASSWORD:-RedisSecure2026}@redis:6379/0
+      ENVIRONMENT: production
+      SECRET_KEY: ${SECRET_KEY}
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2048M
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - aegisiq-prod-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/Dockerfile.frontend
+    container_name: aegisiq-prod-frontend
+    restart: always
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_BASE_URL: https://api.aegisiq.enterprise
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1024M
+    depends_on:
+      - backend
+    networks:
+      - aegisiq-prod-net
+
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.nginx
+    container_name: aegisiq-prod-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - aegisiq-prod-net
+
+volumes:
+  prod_postgres_data:
+  prod_redis_data:
+
+networks:
+  aegisiq-prod-net:
+    driver: bridge

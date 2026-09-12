@@ -1,0 +1,36 @@
+{
+  "platform": "AegisIQ Enterprise Decision Intelligence Platform",
+  "version": "1.0.0",
+  "datasets": [
+    {
+      "dataset_id": "DS-FIN-001",
+      "name": "Q3 Financial Performance & Variance Matrix",
+      "domain": "Financial",
+      "rows_count": 500,
+      "sample_records": [
+        { "period": "2026-Q3", "revenue_actual": 4850000, "revenue_target": 5000000, "variance_pct": -3.0, "ebitda_margin_pct": 24.5 },
+        { "period": "2026-Q2", "revenue_actual": 4620000, "revenue_target": 4500000, "variance_pct": 2.67, "ebitda_margin_pct": 23.8 }
+      ]
+    },
+    {
+      "dataset_id": "DS-CHURN-002",
+      "name": "Enterprise SaaS Account Retention & Churn Risk",
+      "domain": "Sales & Customer Success",
+      "rows_count": 1200,
+      "sample_records": [
+        { "account_id": "ACC-7841", "company": "Apex Logistics", "mrr_usd": 12500, "license_utilization_pct": 34.0, "tickets_last_30d": 12, "nps": 4, "churn_risk_prob": 0.67, "risk_level": "HIGH" },
+        { "account_id": "ACC-9022", "company": "Global Health Partners", "mrr_usd": 34000, "license_utilization_pct": 88.0, "tickets_last_30d": 1, "nps": 9, "churn_risk_prob": 0.08, "risk_level": "LOW" }
+      ]
+    },
+    {
+      "dataset_id": "DS-CYBER-003",
+      "name": "MITRE ATT&CK SIEM Security Incident Logs",
+      "domain": "Cybersecurity",
+      "rows_count": 3500,
+      "sample_records": [
+        { "timestamp": "2026-08-31T14:22:10Z", "source_ip": "198.51.100.44", "threat_type": "T1110.001 - Password Guessing", "mitre_technique": "Brute Force", "severity": "HIGH", "action_taken": "BLOCKED_IP" },
+        { "timestamp": "2026-08-31T15:01:45Z", "source_ip": "203.0.113.19", "threat_type": "T1190 - Exploit Public Facing App", "mitre_technique": "Initial Access", "severity": "CRITICAL", "action_taken": "SANITIZED_AND_QUARANTINED" }
+      ]
+    }
+  ]
+}

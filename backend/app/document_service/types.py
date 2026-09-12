@@ -1,0 +1,37 @@
+from enum import Enum
+
+
+class DepartmentType(str, Enum):
+    FINANCE = "FINANCE"
+    SECURITY = "SECURITY"
+    EXECUTIVE = "EXECUTIVE"
+    LEGAL = "LEGAL"
+    ENGINEERING = "ENGINEERING"
+    HUMAN_RESOURCES = "HUMAN_RESOURCES"
+    SALES = "SALES"
+    OPERATIONS = "OPERATIONS"
+
+
+class CategoryType(str, Enum):
+    POLICY_GOVERNANCE = "POLICY_GOVERNANCE"
+    FINANCIAL_FILING = "FINANCIAL_FILING"
+    OPERATIONAL_RUNBOOK = "OPERATIONAL_RUNBOOK"
+    TECHNICAL_SPEC = "TECHNICAL_SPEC"
+    CONTRACT_SLA = "CONTRACT_SLA"
+    EXECUTIVE_STRATEGY = "EXECUTIVE_STRATEGY"
+
+
+class FileFormat(str, Enum):
+    PDF = "PDF"
+    DOCX = "DOCX"
+    PPTX = "PPTX"
+    TXT = "TXT"
+    MARKDOWN = "MARKDOWN"
+    CSV = "CSV"
+
+
+class DocumentStatus(str, Enum):
+    DRAFT = "DRAFT"
+    PROCESSING = "PROCESSING"
+    INDEXED = "INDEXED"
+    ARCHIVED = "ARCHIVED"

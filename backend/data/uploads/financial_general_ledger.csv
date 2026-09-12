@@ -1,0 +1,7 @@
+period,department,budget,actual_spend,variance,category
+2026-01,R&D / Engineering,1400000,1380000,-20000,Opex
+2026-01,Sales & Marketing,950000,920000,-30000,Opex
+2026-01,Cloud & Infrastructure,600000,590000,-10000,COGS
+2026-02,R&D / Engineering,1400000,1410000,10000,Opex
+2026-02,Sales & Marketing,950000,940000,-10000,Opex
+2026-02,Cloud & Infrastructure,600000,605000,5000,COGS

@@ -1,0 +1,102 @@
+version: "3.9"
+
+services:
+  # --- PostgreSQL Database ---
+  db:
+    image: postgres:16-alpine
+    container_name: aegisiq-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: aegisiq_user
+      POSTGRES_PASSWORD: aegisiq_password
+      POSTGRES_DB: aegisiq_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aegisiq_user -d aegisiq_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aegisiq-network
+
+  # --- Redis In-Memory Cache ---
+  redis:
+    image: redis:7-alpine
+    container_name: aegisiq-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aegisiq-network
+
+  # --- Backend Core Engine ---
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../docker/Dockerfile.backend
+    container_name: aegisiq-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://aegisiq_user:aegisiq_password@db:5432/aegisiq_db
+      REDIS_URL: redis://redis:6379/0
+      ENVIRONMENT: development
+      SECRET_KEY: enterprise_jwt_secret_key_aegisiq_2026
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - aegisiq-network
+
+  # --- Frontend Dashboard ---
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/Dockerfile.frontend
+    container_name: aegisiq-frontend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_BASE_URL: http://backend:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - aegisiq-network
+
+  # --- Nginx Ingress Reverse Proxy ---
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.nginx
+    container_name: aegisiq-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - aegisiq-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  aegisiq-network:
+    driver: bridge
